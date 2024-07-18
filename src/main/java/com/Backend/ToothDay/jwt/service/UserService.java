@@ -2,6 +2,7 @@ package com.Backend.ToothDay.jwt.service;
 
 import com.Backend.ToothDay.community.comment.CommentRepository;
 import com.Backend.ToothDay.community.image.ImageRepository;
+import com.Backend.ToothDay.community.post.PostRepository;
 import com.Backend.ToothDay.jwt.config.jwt.JwtUtil;
 import com.Backend.ToothDay.jwt.model.User;
 import com.Backend.ToothDay.jwt.repository.UserRepository;
@@ -24,6 +25,8 @@ public class UserService {
 
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -33,15 +36,8 @@ public class UserService {
         // 사용자 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
-
-        // 해당 사용자의 방문 기록 삭제
-        visitRepository.deleteAllByUserId(userId);
-
-        // 해당 사용자의 댓글 삭제
-        commentRepository.deleteAllByUserId(userId);
-
-        // 해당 사용자의 이미지 삭제
-        imageRepository.deleteAllByUserId(userId);
+        // 사용자와 연결된 포스트 모두 삭제
+        postRepository.deleteByUser(user);
 
         // 사용자 삭제
         userRepository.delete(user);
