@@ -4,6 +4,7 @@ import com.Backend.ToothDay.community.post.model.Keyword;
 import com.Backend.ToothDay.community.post.model.Post;
 import com.Backend.ToothDay.community.post.model.PostKeyword;
 import com.Backend.ToothDay.community.post.model.PostKeywordId;
+import com.Backend.ToothDay.jwt.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
@@ -95,4 +96,13 @@ public class PostRepository {
         em.remove(em.merge(post));
     }
 
+    public void deleteByUser(User user) {
+        List<Post> posts = em.createQuery("select p from Post p where p.user = :user", Post.class)
+                .setParameter("user", user)
+                .getResultList();
+
+        for (Post post : posts) {
+            delete(post);
+        }
+    }
 }
