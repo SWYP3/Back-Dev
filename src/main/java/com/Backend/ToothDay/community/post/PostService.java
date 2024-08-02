@@ -20,6 +20,7 @@ import com.Backend.ToothDay.jwt.model.User;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostJPARepository postJPARepository;
     private final LikeService likeService;
     private final CommentService commentService;
 
@@ -75,9 +76,18 @@ public class PostService {
     }
 
     public List<PostDTO> getPostDTOByQueryPaging(String query, int limit, int offset) {
-        List<Post> posts = postRepository.search(query, limit, offset);
-        System.out.println(posts);
-        return posts.stream().map(post->getPostDTO(post)).collect(Collectors.toList());
+        List<Post> posts = postJPARepository.findByTitleContaining(query);
+        List<Post> sortedPosts = posts.stream()
+                .sorted((p1, p2) -> p2.getCreateDate().compareTo(p1.getCreateDate()))
+                .collect(Collectors.toList());
+        int fromIndex = offset;
+        int toIndex = Math.min(offset + limit, sortedPosts.size());
+        if (fromIndex > toIndex) {
+            fromIndex = toIndex;
+        }
+        sortedPosts.subList(fromIndex, toIndex);
+
+        return sortedPosts.stream().map(post->getPostDTO(post)).collect(Collectors.toList());
     }
 
 }

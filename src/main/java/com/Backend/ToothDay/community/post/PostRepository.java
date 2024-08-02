@@ -130,8 +130,6 @@ public class PostRepository {
         return query.getResultList();
     }
 
-
-
     public Post findById(long postId) {
         return em.find(Post.class, postId);
     }
@@ -144,37 +142,6 @@ public class PostRepository {
                 .getResultList();
     }
 
-//    public List<Post> searchPosts(String query, int limit, int offset) {
-//        String formattedQuery = "%" + query + "%";
-//        return em.createQuery("select p from Post p where p.title like :query", Post.class)
-//                .setParameter("query", formattedQuery)
-//                .setFirstResult(offset)
-//                .setMaxResults(limit)
-//                .getResultList();
-//    }
-
-    public List<Post> searchPosts(String query, int limit, int offset) {
-        String formattedQuery = "%" + query + "%";
-        log.debug("Executing search with query: {}", formattedQuery);
-        List<Post> results = em.createQuery("select p from Post p where p.title like :query", Post.class)
-                .setParameter("query", formattedQuery)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-        log.debug("Search results: {}", results);
-        return results;
-    }
-
-    public List<Post> search(String search, int limit, int offset) {
-        return em.createQuery("select p from Post p where p.title=: search ",Post.class)
-                .setParameter("search",search)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
-
     public void delete(Post post) {
         em.remove(em.merge(post));
-    }
-
-}
+    }}
