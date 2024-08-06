@@ -34,7 +34,7 @@ public class PostRepository {
             postKeyword.setPost(post);
             postKeyword.setKeyword(keyword);
             em.persist(postKeyword);
-            post.getPostKeywords().add(postKeyword);
+            //post.getPostKeywords().add(postKeyword);
         }
         else {
             Keyword keyword1 = em.find(Keyword.class,1);
@@ -47,7 +47,7 @@ public class PostRepository {
             postKeyword1.setPost(post);
             postKeyword1.setKeyword(keyword1);
             em.persist(postKeyword1);
-            post.getPostKeywords().add(postKeyword1);
+            //post.getPostKeywords().add(postKeyword1);
             for (Integer keywordId : keywordIds) {
                 Keyword keyword = em.find(Keyword.class, keywordId);
                 if(keyword != null) {
@@ -57,7 +57,7 @@ public class PostRepository {
                     postKeyword.setPost(post);
                     postKeyword.setKeyword(keyword);
                     em.persist(postKeyword);
-                    post.getPostKeywords().add(postKeyword);
+                    //post.getPostKeywords().add(postKeyword);
                 }
                 else {
                     throw new IllegalArgumentException("Keyword with ID " + keywordId + " not found");
@@ -78,7 +78,7 @@ public class PostRepository {
             postKeyword.setPost(post);
             postKeyword.setKeyword(keyword);
             em.persist(postKeyword);
-            post.getPostKeywords().add(postKeyword);
+            //post.getPostKeywords().add(postKeyword);
         }
         else {
             Keyword keyword1 = em.find(Keyword.class,1);
@@ -91,7 +91,7 @@ public class PostRepository {
             postKeyword1.setPost(post);
             postKeyword1.setKeyword(keyword1);
             em.persist(postKeyword1);
-            post.getPostKeywords().add(postKeyword1);
+            //post.getPostKeywords().add(postKeyword1);
             for (Integer keywordId : keywordIds) {
                 Keyword keyword = em.find(Keyword.class, keywordId);
                 if(keyword != null) {
@@ -101,7 +101,7 @@ public class PostRepository {
                     postKeyword.setPost(post);
                     postKeyword.setKeyword(keyword);
                     em.persist(postKeyword);
-                    post.getPostKeywords().add(postKeyword);
+                    //post.getPostKeywords().add(postKeyword);
                 }
                 else {
                     throw new IllegalArgumentException("Keyword with ID " + keywordId + " not found");
