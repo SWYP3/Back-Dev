@@ -4,6 +4,7 @@ import com.Backend.ToothDay.community.like.LikeService;
 import com.Backend.ToothDay.community.post.model.Post;
 import com.Backend.ToothDay.community.post.model.PostDTO;
 import com.Backend.ToothDay.jwt.dto.UserDTO;
+import com.Backend.ToothDay.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostJPARepository postJPARepository;
+    private final NotificationRepository notificationRepository;
     private final LikeService likeService;
     private final CommentService commentService;
 
@@ -33,6 +35,7 @@ public class PostService {
     public void resave(Post post, List<Integer> keywordIds) { postRepository.resave(post, keywordIds); }
 
     public void delete(Post post) {
+        notificationRepository.deleteByPostId(post.getId());
         postRepository.delete(post);
     }
 
