@@ -1,10 +1,8 @@
 package com.Backend.ToothDay.community.post;
 
-import com.Backend.ToothDay.community.post.model.Keyword;
-import com.Backend.ToothDay.community.post.model.Post;
-import com.Backend.ToothDay.community.post.model.PostKeyword;
-import com.Backend.ToothDay.community.post.model.PostKeywordId;
+import com.Backend.ToothDay.community.post.model.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -20,6 +18,9 @@ public class PostRepository {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private PostJPARepository postJPARepository;
 
     public void save(Post post, List<Integer> keywordIds) {
         em.persist(post);
@@ -117,6 +118,40 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public List<Post> findBySearchPaging(String search, int limit, int offset) {
+        List<Long> postIds = postJPARepository.findPostIdsByTitleContaining(search);
+        System.out.println(postIds);
+
+        if (postIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // EntityManager로 offset, limit 적용하여 페이징
+        TypedQuery<Post> query= em.createQuery(
+                        "select p from Post p WHERE p.id IN :postIds ORDER BY p.createDate DESC", Post.class)
+                .setParameter("postIds", postIds);
+                        //.setFirstResult(offset)
+                                //.setMaxResults(limit);
+
+        //System.out.println(query.getSingleResult());
+
+        return query.getResultList();
+    }
+
+    public List<Post> findByTitleContaining(String search, int limit, int offset) {
+        // '%' + search + '%'로 검색 패턴 설정
+        String searchPattern = "%" + search + "%";
+
+        // JPQL 쿼리 작성
+        TypedQuery<Post> query = em.createQuery(
+                        "SELECT p FROM Post p WHERE p.title LIKE :searchPattern ORDER BY p.createDate DESC", Post.class)
+                .setParameter("searchPattern", searchPattern)
+                .setFirstResult(offset)  // 페이징을 위한 offset 설정
+                .setMaxResults(limit);   // 페이징을 위한 limit 설정
+
+        // 쿼리 실행 및 결과 반환
+        return query.getResultList();
+    }
 
 
     public List<Post> findByKeywordIdPaging(int keywordId, int limit, int offset) {
