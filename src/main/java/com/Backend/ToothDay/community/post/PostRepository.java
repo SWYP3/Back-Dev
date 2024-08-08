@@ -145,9 +145,9 @@ public class PostRepository {
         // JPQL 쿼리 작성
         TypedQuery<Post> query = em.createQuery(
                         "SELECT p FROM Post p WHERE p.title LIKE :searchPattern ORDER BY p.createDate DESC", Post.class)
-                .setParameter("searchPattern", searchPattern)
-                .setFirstResult(offset)  // 페이징을 위한 offset 설정
-                .setMaxResults(limit);   // 페이징을 위한 limit 설정
+                .setParameter("searchPattern", searchPattern);
+                //.setFirstResult(offset)  // 페이징을 위한 offset 설정
+                //.setMaxResults(limit);   // 페이징을 위한 limit 설정
 
         // 쿼리 실행 및 결과 반환
         return query.getResultList();
