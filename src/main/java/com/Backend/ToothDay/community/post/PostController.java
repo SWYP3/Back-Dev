@@ -139,7 +139,10 @@ public class PostController {
                 }
             }
         }
-        return postDTOList;
+        int fromIndex = offset;
+        int toIndex = Math.min(offset + limit, postDTOList.size());
+        return postDTOList.subList(fromIndex, toIndex);
+
     }
 
 

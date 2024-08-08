@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.Backend.ToothDay.jwt.model.User;
@@ -79,18 +80,24 @@ public class PostService {
     }
 
     public List<PostDTO> getPostDTOByQueryPaging(String query, int limit, int offset) {
-        List<Post> posts = postJPARepository.findByTitleContaining(query);
-        List<Post> sortedPosts = posts.stream()
-                .sorted((p1, p2) -> p2.getCreateDate().compareTo(p1.getCreateDate()))
-                .collect(Collectors.toList());
-        int fromIndex = offset;
-        int toIndex = Math.min(offset + limit, sortedPosts.size());
-        if (fromIndex > toIndex) {
-            fromIndex = toIndex;
-        }
-        sortedPosts.subList(fromIndex, toIndex);
+        //List<Post> posts = postRepository.findBySearchPaging(query, limit, offset);
+        List<Post> posts = postRepository.findByTitleContaining(query, limit, offset);
 
-        return sortedPosts.stream().map(post->getPostDTO(post)).collect(Collectors.toList());
+//        List<Post> sortedPosts = posts.stream()
+//                .sorted((p1, p2) -> p2.getCreateDate().compareTo(p1.getCreateDate()))
+//                .collect(Collectors.toList());
+//
+//        int fromIndex = offset;
+//        int toIndex = Math.min(offset + limit, sortedPosts.size());
+//
+//        if (fromIndex >= sortedPosts.size()) {
+//            return new ArrayList<>();
+//        }
+//        List<Post> paginatedPosts = sortedPosts.subList(fromIndex, toIndex);
+
+        return posts.stream()
+                .map(this::getPostDTO).
+                collect(Collectors.toList());
     }
 
 }
