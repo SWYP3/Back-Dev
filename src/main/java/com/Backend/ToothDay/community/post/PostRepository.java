@@ -118,38 +118,30 @@ public class PostRepository {
                 .getResultList();
     }
 
-    public List<Post> findBySearchPaging(String search, int limit, int offset) {
-        List<Long> postIds = postJPARepository.findPostIdsByTitleContaining(search);
-        System.out.println(postIds);
 
-        if (postIds.isEmpty()) {
-            return new ArrayList<>();
-        }
+    public List<Post> findByTitleContaining(String search, int offset, int limit) {
+        // '%' + search + '%'로 검색 패턴 설정
+        String searchPattern = "%" + search + "%";
 
-        // EntityManager로 offset, limit 적용하여 페이징
-        TypedQuery<Post> query= em.createQuery(
-                        "select p from Post p WHERE p.id IN :postIds ORDER BY p.createDate DESC", Post.class)
-                .setParameter("postIds", postIds);
-                        //.setFirstResult(offset)
-                                //.setMaxResults(limit);
-
-        //System.out.println(query.getSingleResult());
+        String queryStr = "SELECT p FROM Post p WHERE p.title LIKE :searchPattern ORDER BY p.createDate DESC";
+        TypedQuery<Post> query = em.createQuery(queryStr, Post.class)
+                .setParameter("searchPattern", searchPattern)
+                .setFirstResult(offset)  // 페이징을 위한 offset 설정
+                .setMaxResults(limit);   // 페이징을 위한 limit 설정
 
         return query.getResultList();
     }
 
-    public List<Post> findByTitleContaining(String search, int limit, int offset) {
+    public List<Post> findc(String search, int limit, int offset) {
         // '%' + search + '%'로 검색 패턴 설정
         String searchPattern = "%" + search + "%";
 
-        // JPQL 쿼리 작성
-        TypedQuery<Post> query = em.createQuery(
-                        "SELECT p FROM Post p WHERE p.title LIKE :searchPattern ORDER BY p.createDate DESC", Post.class)
-                .setParameter("searchPattern", searchPattern);
-                //.setFirstResult(offset)  // 페이징을 위한 offset 설정
-                //.setMaxResults(limit);   // 페이징을 위한 limit 설정
+        String queryStr = "SELECT p FROM Post p WHERE p.title LIKE :searchPattern ORDER BY p.createDate DESC";
+        TypedQuery<Post> query = em.createQuery(queryStr, Post.class)
+                .setParameter("searchPattern", searchPattern)
+                .setFirstResult(offset)  // 페이징을 위한 offset 설정
+                .setMaxResults(limit);   // 페이징을 위한 limit 설정
 
-        // 쿼리 실행 및 결과 반환
         return query.getResultList();
     }
 
