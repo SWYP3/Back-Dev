@@ -79,21 +79,9 @@ public class PostService {
         return posts.stream().map(post->getPostDTO(post)).collect(Collectors.toList());
     }
 
-    public List<PostDTO> getPostDTOByQueryPaging(String query, int limit, int offset) {
-        //List<Post> posts = postRepository.findBySearchPaging(query, limit, offset);
-        List<Post> posts = postRepository.findByTitleContaining(query, limit, offset);
+    public List<PostDTO> getPostDTOByQueryPaging(String query, int offset, int limit) {
 
-//        List<Post> sortedPosts = posts.stream()
-//                .sorted((p1, p2) -> p2.getCreateDate().compareTo(p1.getCreateDate()))
-//                .collect(Collectors.toList());
-//
-//        int fromIndex = offset;
-//        int toIndex = Math.min(offset + limit, sortedPosts.size());
-//
-//        if (fromIndex >= sortedPosts.size()) {
-//            return new ArrayList<>();
-//        }
-//        List<Post> paginatedPosts = sortedPosts.subList(fromIndex, toIndex);
+        List<Post> posts = postRepository.findByTitleContaining(query, offset, limit);
 
         return posts.stream()
                 .map(this::getPostDTO).

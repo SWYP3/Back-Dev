@@ -29,6 +29,7 @@ public class PostController {
     private final PostService postService;
     private final ImageService imageService;
     private final LikeService likeService;
+    private final PostRepository postRepository;
 
     @ApiOperation(value = "비유저 커뮤니티 첫화면(무한스크롤)")
     @GetMapping("/community") //비유저 커뮤니티 첫화면 페이징
@@ -139,9 +140,7 @@ public class PostController {
                 }
             }
         }
-        int fromIndex = offset;
-        int toIndex = Math.min(offset + limit, postDTOList.size());
-        return postDTOList.subList(fromIndex, toIndex);
+        return postDTOList;
 
     }
 
